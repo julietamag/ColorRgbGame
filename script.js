@@ -11,17 +11,39 @@ const container = document.getElementsByClassName('square');
 const easyBtn = document.getElementById('easyButton');
 const hardBtn = document.getElementById('hardButton');
 const nameDisplayer = document.getElementById('nameDisplayer');
+const elemReset = document.getElementById('reset');
+const resetBtn = document.getElementById('resetBtn')
+const attempt = document.getElementById('attempt-number');
+const score = document.getElementById('score-number');
+let numAttempt = 0;
+let numScore = 0;
 
-// loop over the array of colors nd fill all the squares with each
-function colorAllSquares(){
+function init() {
+    // event listener to restart game with new colors
+    elemReset.addEventListener('click', reset);
+    reset();
+    // event listeners for the clicked square
+//     for (let i = 0; i < colors.length; i++) {
+//         squares[i].addEventListener('click', getRgb);
+//    }
+}
+
+window.addEventListener("load", () => {
+    init()
+  });
+
+// loop over the array of colors and fill all the squares with each
+function colorAllSquares() {
     for (let i = 0; i < colors.length; i++) {
         squares[i].style.backgroundColor = colors[i];
+        squares[i].addEventListener('click', getRgb);
+        console.log(colors)
     }
 }
 
 // random color index
 function pickColor() {
-     return Math.floor(Math.random() * colors.length)
+    return Math.floor(Math.random() * colors.length)
 }
 
 // create a random rgb color
@@ -54,12 +76,15 @@ function getRgb(e) {
         const color = window.getComputedStyle(elem, null).getPropertyValue('background-color');
         clickedSquare.style.backgroundColor = color;
         innerMessage.innerHTML = 'Try Again';
+        attemptIncrement();
     }
     if (clickedColor == pickedColor) {
         innerMessage.innerHTML = 'Correct!';
         elemReset.innerHTML = 'Play again!';
         changeColor(pickedColor);
         nameDisplayer.style.backgroundColor = pickedColor;
+        scoreIncrement();
+        numAttempt = 0;
     }
 }
 
@@ -70,40 +95,30 @@ function changeColor(color) {
     }
 }
 
-// event listeners for the clicked square
-for (let i = 0; i < colors.length; i++) {
-    squares[i].style.backgroundColor = colors[i];
-    squares[i].addEventListener('click', getRgb);
-    removeEventListener('click', getRgb)
-}
-
 // display the chosen rgb on the h2 tag
 document.getElementById('colorDisplay').innerHTML = pickedColor;
 
 // restart game with new colors
 function reset() {
     colors = [];
+    numAttempt = 0;
     generateRandomColors(numberOfSquares);
     pickedColor = colors[pickColor()];
     document.getElementById('colorDisplay').innerHTML = pickedColor;
     innerMessage.innerHTML = '';
     elemReset.innerHTML = 'New Colors';
     nameDisplayer.style.backgroundColor = '#48A9A6';
+    attempt.innerHTML = numAttempt;
+    score.innerHTML = numScore
     colorAllSquares();
 }
-
-
-// event listener to restart game with new colors
-const elemReset = document.getElementById('reset');
-elemReset.addEventListener('click', reset);
-
 
 //change game level to hard
 hardBtn.addEventListener('click', () => {
     hardBtn.className = 'selected';
     easyBtn.className = '';
     numberOfSquares = 6;
-    hard()
+    reset();
 })
 
 //change game level to easy
@@ -111,38 +126,50 @@ easyBtn.addEventListener('click', () => {
     easyBtn.className = 'selected';
     hardBtn.className = '';
     numberOfSquares = 3;
-    easy();
+    if(numberOfSquares == 3){
+        for (let i = 0; i < container.length; i++){
+            if (colors[i] !== undefined){
+                container[i].style.display = 'none';
+            }
+        } 
+    }
+    // colors = colors.slice(0, 3);
+    // hide the last 3 sqaures
+    // for (let i = 0; i < container.length; i++) {
+    //     if (colors[i] !== undefined) {
+    //         container[i].style.backgroundColor = colors[i];
+    //     } else {
+    //         container[i].style.display = 'none';
+    //     }
+    reset();
 })
 
-// when easy: generate new colors, only display 3, pick a new winner rgb
-function easy(){
-    colors = [];
-    generateRandomColors(numberOfSquares);
-    colors = colors.slice(0, 3);
-    pickedColor = colors[pickColor()];
-    document.getElementById('colorDisplay').innerHTML = pickedColor;
-    nameDisplayer.style.backgroundColor = '#48A9A6';
-    for (let i = 0; i < container.length; i++) {
-        if(colors[i] !== undefined){
-            container[i].style.backgroundColor = colors[i];
-        } else{
-            container[i].style.display = 'none';
-        }
+// attempts functionality
+function attemptIncrement() {
+    if (clickedColor !== pickedColor) {
+        numAttempt++;
+        attempt.innerHTML = numAttempt;
     }
 }
 
-// when hard: generate new colors, pick a new winner rgb
-function hard(){
-    colors = [];
-    generateRandomColors(numberOfSquares);
-    for (let i = 0; i < container.length; i++){
-        container[i].style.display = 'block';
-        container[i].style.backgroundColor = colors[i];
+// scores functionality
+function scoreIncrement() {
+    for (let i = 0; i < squares.length; i++) {
+        squares[i].removeEventListener('click', getRgb);
     }
-    pickedColor = colors[pickColor()];
-    document.getElementById('colorDisplay').innerHTML = pickedColor;
-    nameDisplayer.style.backgroundColor = '#48A9A6';
+    if (numAttempt == 0) {
+        numScore += 2;
+        score.innerHTML = numScore
+    }
+    if (numAttempt == 1) {
+        numScore++;
+        score.innerHTML = numScore
+    }
+
 }
 
 
+// reset game button 
+resetBtn.addEventListener('click', reset);
+// resetBtn.removeEventListener('click', reset())
 
