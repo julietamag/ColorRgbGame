@@ -1,6 +1,9 @@
-// let colors = ['rgb(78, 2, 80)', 'rgb(128, 26, 134)','rgb(100, 89, 134)','rgb(143, 227, 136)','rgb(88, 188, 130)', 'rgb(56, 167, 0)'];
-let colors = [];
+// //enable popper bootstrap
+const popoverTriggerList = document.querySelectorAll('[data-bs-toggle="popover"]')
+// eslint-disable-next-line @typescript-eslint/no-unused-vars, no-undef
+const popoverList = [...popoverTriggerList].map(popoverTriggerEl => new bootstrap.Popover(popoverTriggerEl));
 
+let colors = [];
 let clickedColor = '';
 let clickedSquare;
 let randomCol;
