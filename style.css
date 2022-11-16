@@ -1,11 +1,13 @@
 body {
-  background-color: #E4DFDA;
-  font-family: 'Roboto Mono', monospace;
+  background-color: white;
+  font-family: 'Raleway', sans-serif;
 }
 
-h1 {
-  color: white;
+#nameDisplayer h1 {
+  color: #0c0c0c;
   text-align: center;
+  font-weight: 800;
+  font-size: 2.2rem;
 }
 
 .square {
@@ -13,7 +15,6 @@ h1 {
   width: 30%;
   height: 0;
   padding-bottom: 30%;
-  background-color: burlywood;
   margin: 5px;
   box-shadow: rgba(0, 0, 0, 0.18) 0px 2px 4px;
   border-radius: 1rem;
@@ -33,7 +34,7 @@ h1 {
 }
 
 #stripe {
-  background-color: #FF5A5F;
+  background-color: #FA2742;
   height: 3rem;
   text-align: center;
   display: inline-flex;
@@ -49,7 +50,6 @@ h1 {
 #nameDisplayer {
   width: 100%;
   border: 1px solid black;
-  background-color: #48A9A6;
   box-shadow: rgba(0, 0, 0, 0.18) 0px 2px 4px;
   margin: 0;
 }
@@ -84,6 +84,23 @@ button:hover{
   box-shadow: rgba(50, 50, 93, 0.25) 0px 30px 60px -12px inset, rgba(0, 0, 0, 0.3) 0px 18px 36px -18px inset;
 }
 
+#tracking-btn{
+  display: inline-flex;
+  align-items: center;
+  justify-content: space-evenly;
+  width: 100%;
+  margin: 1rem auto;
+  text-align: center;
+}
+
+#resetBtn-container{
+  width: 100%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin: 1rem 0;
+}
+
 @media screen and (max-width: 600px){
   h1{
     font-size: 1.5rem;
@@ -106,5 +123,4 @@ button:hover{
     flex-basis: 100%;
     margin: 1rem auto;
   }
-
 }

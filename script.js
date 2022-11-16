@@ -1,12 +1,16 @@
 // let colors = ['rgb(78, 2, 80)', 'rgb(128, 26, 134)','rgb(100, 89, 134)','rgb(143, 227, 136)','rgb(88, 188, 130)', 'rgb(56, 167, 0)'];
 let colors = [];
 
-const squares = document.querySelectorAll('.square');
 let clickedColor = '';
 let clickedSquare;
 let randomCol;
 let numberOfSquares = 6;
+let numAttempt = 0;
+let numScore = 0;
+let pickedColor;
+let backgroundColor = '#E8EAE3';
 let innerMessage = document.getElementById('message');
+const squares = document.querySelectorAll('.square');
 const container = document.getElementsByClassName('square');
 const easyBtn = document.getElementById('easyButton');
 const hardBtn = document.getElementById('hardButton');
@@ -15,29 +19,25 @@ const elemReset = document.getElementById('reset');
 const resetBtn = document.getElementById('resetBtn')
 const attempt = document.getElementById('attempt-number');
 const score = document.getElementById('score-number');
-let numAttempt = 0;
-let numScore = 0;
 
 function init() {
+    //generate the random array of colors and choose one to be the chosen color.
+    generateRandomColors(numberOfSquares);
+    pickedColor = colors[pickColor()];
     // event listener to restart game with new colors
     elemReset.addEventListener('click', reset);
     reset();
-    // event listeners for the clicked square
-//     for (let i = 0; i < colors.length; i++) {
-//         squares[i].addEventListener('click', getRgb);
-//    }
 }
 
 window.addEventListener("load", () => {
-    init()
-  });
+    init();
+});
 
 // loop over the array of colors and fill all the squares with each
 function colorAllSquares() {
     for (let i = 0; i < colors.length; i++) {
         squares[i].style.backgroundColor = colors[i];
         squares[i].addEventListener('click', getRgb);
-        console.log(colors)
     }
 }
 
@@ -61,9 +61,6 @@ function generateRandomColors(num) {
     }
 }
 
-//generate the random array of colors and choose one to be the chosen color.
-generateRandomColors(numberOfSquares);
-let pickedColor = colors[pickColor()];
 
 //  functionality: 
 // if click on wrong color = change the backgrnd color to the same as body and display fail message 
@@ -101,13 +98,12 @@ document.getElementById('colorDisplay').innerHTML = pickedColor;
 // restart game with new colors
 function reset() {
     colors = [];
-    numAttempt = 0;
     generateRandomColors(numberOfSquares);
     pickedColor = colors[pickColor()];
     document.getElementById('colorDisplay').innerHTML = pickedColor;
     innerMessage.innerHTML = '';
     elemReset.innerHTML = 'New Colors';
-    nameDisplayer.style.backgroundColor = '#48A9A6';
+    nameDisplayer.style.backgroundColor = backgroundColor;
     attempt.innerHTML = numAttempt;
     score.innerHTML = numScore
     colorAllSquares();
@@ -117,7 +113,21 @@ function reset() {
 hardBtn.addEventListener('click', () => {
     hardBtn.className = 'selected';
     easyBtn.className = '';
+    numScore = 0;
     numberOfSquares = 6;
+    for (let i = 0; i < container.length; i++){
+        container[i].style.display = 'block';
+    }
+    reset();
+})
+hardBtn.removeEventListener('click', () => {
+    hardBtn.className = 'selected';
+    easyBtn.className = '';
+    numScore = 0;
+    numberOfSquares = 6;
+    for (let i = 0; i < container.length; i++){
+        container[i].style.display = 'block';
+    }
     reset();
 })
 
@@ -125,24 +135,36 @@ hardBtn.addEventListener('click', () => {
 easyBtn.addEventListener('click', () => {
     easyBtn.className = 'selected';
     hardBtn.className = '';
+    numScore = 0;
     numberOfSquares = 3;
-    if(numberOfSquares == 3){
-        for (let i = 0; i < container.length; i++){
-            if (colors[i] !== undefined){
-                container[i].style.display = 'none';
-            }
-        } 
-    }
-    // colors = colors.slice(0, 3);
+    colors = colors.slice(0, 3);
     // hide the last 3 sqaures
-    // for (let i = 0; i < container.length; i++) {
-    //     if (colors[i] !== undefined) {
-    //         container[i].style.backgroundColor = colors[i];
-    //     } else {
-    //         container[i].style.display = 'none';
-    //     }
+    for (let i = 0; i < container.length; i++) {
+        if (colors[i] !== undefined) {
+            container[i].style.backgroundColor = colors[i];
+        } else {
+            container[i].style.display = 'none';
+        }
+    }
     reset();
 })
+easyBtn.removeEventListener('click', () => {
+    easyBtn.className = 'selected';
+    hardBtn.className = '';
+    numScore = 0;
+    numberOfSquares = 3;
+    colors = colors.slice(0, 3);
+    // hide the last 3 sqaures
+    for (let i = 0; i < container.length; i++) {
+        if (colors[i] !== undefined) {
+            container[i].style.backgroundColor = colors[i];
+        } else {
+            container[i].style.display = 'none';
+        }
+    }
+    reset();
+})
+
 
 // attempts functionality
 function attemptIncrement() {
@@ -168,8 +190,10 @@ function scoreIncrement() {
 
 }
 
-
 // reset game button 
-resetBtn.addEventListener('click', reset);
-// resetBtn.removeEventListener('click', reset())
+resetBtn.addEventListener('click', () =>{
+    numScore = 0;
+    numAttempt = 0;
+    reset()
+});
 
